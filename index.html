@@ -51,6 +51,25 @@
       }
     }
     </script>
+
+    <!-- Custom Post Link Styles -->
+    <style type="text/tailwindcss">
+        .post-content a {
+            /* To test different link styles, uncomment ONE of the @apply lines below */
+
+            /* Option 1: Dotted Underline (Current) */
+            /* @apply text-accent-primary hover:text-accent-primary/80 transition-colors underline decoration-dotted; */
+
+            /* Option 2: Solid Underline */
+            /* @apply text-accent-primary hover:text-accent-primary/80 transition-colors underline; */
+
+            /* Option 3: No Underline */
+            @apply text-accent-primary hover:text-accent-primary/80 transition-colors; 
+        }
+    </style>
+
+    <script>
+    </script>
 </head>
 <body class="bg-background text-text font-serif antialiased">
 
@@ -205,7 +224,7 @@
                     // This HTML structure matches the lexicon item style from your template
                     postElement.innerHTML = `
                         <!-- Narrative Element: Definition uses font-serif (Lora) -->
-                        <div class="text-lg leading-relaxed text-text/90">
+                        <div class="post-content text-lg leading-relaxed text-text/90">
                             ${post.content}
                             ${imageHtml}
                         </div>
