@@ -100,22 +100,21 @@
         <footer class="">
 
                         <!-- 'Grounded' Navigation -->
-            <div class="mb-12 text-center sm:text-center">
-                <!-- UI Element: Uses font-sans (Inter) --><br><br><Br>
+            <div class="mt-24 mb-12 text-center">
+                <!-- UI Element: Uses font-sans (Inter) -->
                 <a href="https://unearth.im" class="font-sans text-sm font-semibold tracking-wide uppercase text-text/70 hover:text-text transition-colors" aria-label="Back to unearth.im home">
                     &larr; Back to unearth.im
                 </a>
-            </div>            
-            <div class="max-w-7xl mx-auto text-center py-12 mt-24 px-4 sm:px-6 lg:px-8">
+            </div>
+            <div class="max-w-7xl mx-auto text-center pt-12 pb-8 px-4 sm:px-6 lg:px-8">
                 <!-- UI Element: Uses font-sans (Inter) -->
-                <p class="font-sans text-base text-text/60">
-                    &copy; <span id="current-year"></span> <a href="https://unearth.im" class="hover:text-accent-primary transition-colors" target="_blank" rel="noopener">unearth<span class="text-accent-primary">.im</span></a> &ndash; <a href="https://unearth.im/museum/" target="_blank" rel="noopener" class="hover:text-accent-primary transition-colors">archive &amp; anvil</a>
+                <p class="font-sans text-sm text-text/60">
+                    &copy; <span id="current-year"></span> <a href="https://unearth.im" class="hover:text-accent-primary transition-colors" target="_blank" rel="noopener">unearth<span class="text-accent-primary">.im</span></a> &ndash; archive &amp; anvil
                 </p>
             </div>
 
 
         </footer>
-    </div>
 
     <!-- 
       ===============================================================
@@ -201,22 +200,23 @@
                     // Create the HTML for a single post
                     const postElement = document.createElement('div');
                     // *** ADDED: These classes create the "card" look ***
-                    postElement.className = 'bg-white rounded-lg shadow-sm border border-text/20 p-6 md:p-8';
+                    postElement.className = 'bg-white rounded-lg shadow-sm border border-text/20 p-6 md:p-8 transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-1';
                     
                     // This HTML structure matches the lexicon item style from your template
                     postElement.innerHTML = `
-                        <!-- UI Element: Term uses font-sans (Inter) -->
-                        <h2 class="font-sans text-xl font-semibold tracking-tight text-text">
-                            <!-- *** EDITED: Removed underline classes *** -->
-                            <a href="${permalink}" class="text-accent-primary hover:text-accent-primary/80 transition-colors">
-                                ${formattedDate}
-                            </a>
-                        </h2>
-                        
                         <!-- Narrative Element: Definition uses font-serif (Lora) -->
-                        <div class="mt-2 text-lg leading-relaxed text-text/90">
+                        <div class="text-lg leading-relaxed text-text/90">
                             ${post.content}
                             ${imageHtml}
+                        </div>
+
+                        <!-- UI Element: Timestamp uses font-sans (Inter) -->
+                        <div class="mt-6 flex justify-end items-center">
+                            <a href="${permalink}" class="group flex items-center font-sans text-sm text-text/60 hover:text-accent-primary transition-colors">
+                                <!-- Clock Icon (Heroicons) -->
+                                <svg class="w-4 h-4 mr-1.5 text-text/40 group-hover:text-accent-primary/80 transition-colors" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.414-1.414L11 10.586V6z" clip-rule="evenodd"></path></svg>
+                                ${formattedDate}
+                            </a>
                         </div>
                     `;
                     
@@ -233,5 +233,6 @@
             }
         );
     </script>
+    </div>
 </body>
 </html>
