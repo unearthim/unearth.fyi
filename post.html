@@ -9,9 +9,21 @@
     <meta name="description" content="A post from the unearth.fyi foundry.">
     <meta name="robots" content="noindex"> <!-- You can change this to "index" later -->
 
-    <!-- SEO & Open Graph Tags -->
+    <!-- 
+      ===============================================================
+      UPDATED: Added all missing meta tags
+      ===============================================================
+    -->
     <meta property="og:title" content="Loading Post... | unearth.fyi">
     <meta property="og:description" content="A post from the unearth.fyi foundry.">
+    <meta property="og:image" content="https://placehold.co/1200x630/F8F7F4/2E2E2E?text=unearth.fyi">
+    <meta property="og:url" content="https://unearth.fyi"> <!-- This will be the specific post URL -->
+    <meta property="og:type" content="article">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Loading Post... | unearth.fyi">
+    <meta name="twitter:description" content="A post from the unearth.fyi foundry.">
+    <meta name="twitter:image" content="https://placehold.co/1200x630/F8F7F4/2E2E2E?text=unearth.fyi">
     
     <!-- Typography (Lora for Serif/Narrative, Inter for Sans/UI) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -185,10 +197,13 @@
                     
                     // --- Update Meta Tags ---
                     const excerpt = (post.content.substring(0, 100) + "...").replace(/<[^>]+>/g, '');
+                    const postUrl = window.location.href; // Get the full permalink URL
+                    
                     document.title = `${excerpt} | unearth.fyi`;
                     document.querySelector('meta[name="description"]').setAttribute("content", excerpt);
                     document.querySelector('meta[property="og:title"]').setAttribute("content", `${excerpt} | unearth.fyi`);
                     document.querySelector('meta[property="og:description"]').setAttribute("content", excerpt);
+                    document.querySelector('meta[property="og:url"]').setAttribute("content", postUrl); // Set the specific post URL
                     document.querySelector('meta[name="twitter:title"]').setAttribute("content", `${excerpt} | unearth.fyi`);
                     document.querySelector('meta[name="twitter:description"]').setAttribute("content", excerpt);
                     
