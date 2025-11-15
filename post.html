@@ -4,24 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>What's New | unearth.fyi</title>
-    <meta name="description" content="The latest news, announcements, and micro-updates from the unearth.im brand foundry.">
+    <!-- Title & Meta will be updated by JS -->
+    <title>Loading Post... | unearth.fyi</title>
+    <meta name="description" content="A post from the unearth.fyi foundry.">
+    <meta name="robots" content="noindex"> <!-- You can change this to "index" later -->
 
     <!-- SEO & Open Graph Tags -->
-    <meta property="og:title" content="What's New | unearth.fyi">
-    <meta property="og:description" content="The latest news, announcements, and micro-updates from the unearth.im brand foundry.">
-    <meta property="og:image" content="https://placehold.co/1200x630/F8F7F4/2E2E2E?text=What%27s+New">
-    <meta property="og:url" content="https://unearth.fyi">
-    <meta property="og:type" content="website">
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="What's New | unearth.fyi">
-    <meta name="twitter:description" content="The latest news, announcements, and micro-updates from the unearth.im brand foundry.">
-    <meta name="twitter:image" content="https://placehold.co/1200x630/F8F7F4/2E2E2E?text=What%27s+New">
-
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://unearth.fyi">
-
+    <meta property="og:title" content="Loading Post... | unearth.fyi">
+    <meta property="og:description" content="A post from the unearth.fyi foundry.">
+    
     <!-- Typography (Lora for Serif/Narrative, Inter for Sans/UI) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,14 +27,12 @@
       theme: {
         extend: {
           colors: {
-            // 'Earth & Ink' Palette (Light Mode)
             'background': '#F8F7F4', // Off-White
             'text': '#2E2E2E',       // Charcoal
             'accent-primary': '#A95C3D', // Burnt Sienna
             'accent-secondary': '#5A7D8C', // Slate Blue
           },
           fontFamily: {
-            // 'The Manuscript & The Interface' Typography
             'serif': ['Lora', 'serif'],
             'sans': ['Inter', 'sans-serif'],
           }
@@ -61,39 +50,32 @@
 
             <!-- 'Grounded' Navigation -->
             <div class="mb-12 text-center sm:text-left">
-                <!-- UI Element: Uses font-sans (Inter) -->
-                <a href="https://unearth.im" class="font-sans text-sm font-semibold tracking-wide uppercase text-text/70 hover:text-text transition-colors" aria-label="Back to unearth.im home">
-                    &larr; Back to unearth.im
+                <a href="index.html" class="font-sans text-sm font-semibold tracking-wide uppercase text-text/70 hover:text-text transition-colors" aria-label="Back to all posts" id="back-link">
+                    &larr; Back to all posts
                 </a>
             </div>
 
             <section class="text-center">
-                <!-- Narrative Element: Uses font-serif (Lora) -->
                 <h1 class="text-5xl md:text-7xl font-medium tracking-tight text-text">
                     unearth<span class="text-accent-primary">.fyi</span>
                 </h1>
-                
-                <!-- Narrative Element: Uses font-serif (Lora) -->
                 <article class="mt-8 text-lg md:text-xl leading-relaxed text-text/90 max-w-2xl mx-auto">
-                    <p>
-                        The latest news, announcements, and micro-updates from the foundry. For your information.
-                    </p>
+                    <p>A post from the foundry.</p>
                 </article>
             </section>
 
             <!-- 
               ===============================================================
-              FIREBASE FEED TARGET
+              FIREBASE SINGLE POST TARGET
               ===============================================================
             -->
             <section class="mt-16 max-w-2xl mx-auto">
-                <!-- Each post will be injected here, spaced out just like the lexicon -->
-                <div id="feed-target" class="space-y-10">
+                <div id="post-target">
                     
                     <!-- Loading State -->
                     <div id="loading-state">
                         <p class="mt-2 text-lg leading-relaxed text-text/90 text-center">
-                            Loading posts...
+                            Loading post...
                         </p>
                     </div>
 
@@ -105,7 +87,6 @@
         <!-- Footer -->
         <footer class="">
             <div class="max-w-7xl mx-auto text-center py-12 mt-24 px-4 sm:px-6 lg:px-8">
-                <!-- UI Element: Uses font-sans (Inter) -->
                 <p class="font-sans text-base text-text/60">
                     &copy; <span id="current-year"></span> <a href="https://unearth.im" class="hover:text-accent-primary transition-colors" target="_blank" rel="noopener">unearth<span class="text-accent-primary">.im</span></a> &ndash; <a href="https://unearth.im/museum/" target="_blank" rel="noopener" class="hover:text-accent-primary transition-colors">Archive &amp; Anvil</a>
                 </p>
@@ -115,7 +96,7 @@
 
     <!-- 
       ===============================================================
-      FIREBASE SCRIPT
+      FIREBASE SCRIPT (for SINGLE POST)
       ===============================================================
     -->
     <script type="module">
@@ -123,13 +104,10 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
         import { 
             getFirestore, 
-            collection, 
-            query, 
-            orderBy, 
-            limit, 
-            onSnapshot 
+            doc, 
+            getDoc 
         } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
-        
+
         // 2. Your web app's Firebase configuration
         // (Remember to replace this with your NEWLY rotated key!)
         const firebaseConfig = {
@@ -147,32 +125,33 @@
         const db = getFirestore(app);
 
         // 4. Get the DOM elements
-        const feedTarget = document.getElementById("feed-target");
+        const postTarget = document.getElementById("post-target");
         const loadingState = document.getElementById("loading-state");
+        const backLink = document.getElementById("back-link");
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
-        // 5. Create the Firestore query
-        const postsCollection = collection(db, "microblog");
-        const q = query(postsCollection, orderBy("timestamp", "desc"), limit(25));
+        // 5. Get the post ID from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('id');
+        
+        // Set back-link to the main page (assuming it's at the root or 'index.html')
+        // Use './' to go to the root of the current directory.
+        backLink.href = './'; 
 
-        // 6. Listen for real-time updates
-        onSnapshot(q, 
-            (snapshot) => {
-                // Clear the loading state
-                feedTarget.innerHTML = ""; 
+        async function fetchPost() {
+            if (!postId) {
+                postTarget.innerHTML = `<p class="mt-2 text-lg leading-relaxed text-red-600 text-center">Error: No post ID provided.</p>`;
+                return;
+            }
 
-                if (snapshot.empty) {
-                    feedTarget.innerHTML = `
-                        <p class="mt-2 text-lg leading-relaxed text-text/90 text-center">
-                            No posts yet. Check back soon.
-                        </p>
-                    `;
-                    return;
-                }
+            try {
+                const postRef = doc(db, "microblog", postId);
+                const docSnap = await getDoc(postRef);
 
-                // Loop through each post and build HTML
-                snapshot.forEach(doc => {
-                    const post = doc.data();
+                // *** FIXED: This block was broken by stray diff comments ***
+                if (docSnap.exists()) {
+                    // --- Post Found! ---
+                    const post = docSnap.data();
                     
                     // Format the timestamp
                     const timestamp = post.timestamp.toDate();
@@ -180,54 +159,61 @@
                         dateStyle: 'medium',
                         timeStyle: 'short'
                     });
-                    
-                    // Create the permalink
-                    const permalink = `post.html?id=${doc.id}`;
 
                     // Check for an image
                     let imageHtml = '';
                     if (post.imageUrl) {
-                        // *** This block was fixed ***
                         imageHtml = `
-                            <img src="${post.imageUrl}" alt="post image" 
-                                 class="mt-4 mb-6 rounded-lg border border-text/20 w-full object-cover">
+                          <img src="${post.imageUrl}" alt="post image" 
+                               class="mt-4 mb-6 rounded-lg border border-text/20 w-full object-cover">
                         `;
                     }
-
-                    // Create the HTML for a single post
-                    const postElement = document.createElement('div');
-                    // *** ADDED: These classes create the "card" look ***
-                    postElement.className = 'bg-white rounded-lg shadow-sm border border-text/20 p-6 md:p-8';
                     
-                    // This HTML structure matches the lexicon item style from your template
-                    postElement.innerHTML = `
-                        <!-- UI Element: Term uses font-sans (Inter) -->
+                    // *** This wraps the single post in the card style ***
+                    postTarget.className = 'bg-white rounded-lg shadow-sm border border-text/20 p-6 md:p-8';
+
+                    // Build the HTML
+                    postTarget.innerHTML = `
                         <h2 class="font-sans text-xl font-semibold tracking-tight text-text">
-                            <!-- *** EDITED: Removed underline classes *** -->
-                            <a href="${permalink}" class="text-accent-primary hover:text-accent-primary/80 transition-colors">
-                                ${formattedDate}
-                            </a>
+                            <span class="text-accent-primary">${formattedDate}</span>
                         </h2>
-                        
-                        <!-- Narrative Element: Definition uses font-serif (Lora) -->
                         <div class="mt-2 text-lg leading-relaxed text-text/90">
                             ${post.content}
                             ${imageHtml}
                         </div>
                     `;
                     
-                    feedTarget.appendChild(postElement);
-                });
-            },
-            (error) => {
-                console.error("Error fetching posts: ", error);
-                loadingState.innerHTML = `
-                    <p class="mt-2 text-lg leading-relaxed text-red-600 text-center">
-                        Error loading posts. Please try again later.
-                    </p>
-                `;
+                    // --- Update Meta Tags ---
+                    const excerpt = (post.content.substring(0, 100) + "...").replace(/<[^>]+>/g, '');
+                    document.title = `${excerpt} | unearth.fyi`;
+                    document.querySelector('meta[name="description"]').setAttribute("content", excerpt);
+                    document.querySelector('meta[property="og:title"]').setAttribute("content", `${excerpt} | unearth.fyi`);
+                    document.querySelector('meta[property="og:description"]').setAttribute("content", excerpt);
+                    document.querySelector('meta[name="twitter:title"]').setAttribute("content", `${excerpt} | unearth.fyi`);
+                    document.querySelector('meta[name="twitter:description"]').setAttribute("content", excerpt);
+                    
+                    // Set OG image if post has one
+                    if(post.imageUrl) {
+                        document.querySelector('meta[property="og:image"]').setAttribute("content", post.imageUrl);
+                        document.querySelector('meta[name="twitter:image"]').setAttribute("content", post.imageUrl);
+                    }
+                    
+                    // Allow indexing
+                    document.querySelector('meta[name="robots"]').setAttribute("content", "index, follow");
+
+                } else {
+                    postTarget.innerHTML = `<p class="mt-2 text-lg leading-relaxed text-text/90 text-center">Error: Post not found.</p>`;
+                }
+                // *** End of fixed block ***
+
+            } catch (error) {
+                console.error("Error fetching post: ", error);
+                postTarget.innerHTML = `<p class="mt-2 text-lg leading-relaxed text-red-600 text-center">Error loading post.</p>`;
             }
-        );
+        }
+
+        // 6. Run the function
+        fetchPost();
     </script>
 </body>
 </html>
